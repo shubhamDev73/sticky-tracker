@@ -4,6 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <variable
+            name="viewModel"
+            type="org.smoke.sticky.tracker.TrackerViewModel" />
 
     </data>
 
@@ -13,13 +16,36 @@
         tools:context=".MainActivity">
 
         <TextView
+            android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Hello World"
+            android:text="Today's Cigs"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.19" />
+
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:text="@{viewModel.stickies.toString(), default=0}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.35000002" />
+
+        <Button
+            android:id="@+id/addButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:text="+"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:onClick="@{() -> viewModel.addSticky()}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
