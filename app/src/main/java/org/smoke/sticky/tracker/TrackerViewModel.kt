@@ -6,19 +6,24 @@ import androidx.lifecycle.ViewModel
 
 class TrackerViewModel: ViewModel() {
 
-    private val _stickies = MutableLiveData<Float>()
-    val stickies: LiveData<Float> = _stickies
+    private val _stickies = MutableLiveData<List<Sticky>>()
+    val stickies: LiveData<List<Sticky>> = _stickies
+
+    private val _count = MutableLiveData<Float>()
+    val count: LiveData<Float> = _count
 
     init {
-        _stickies.value = 0f
+        _stickies.value = emptyList()
+        _count.value = 0f
     }
 
     fun addSticky() {
-        _stickies.value = stickies.value?.plus(1)
+        addSticky(1f)
     }
 
-    fun addSticky(stickies: Float) {
-        _stickies.value = this.stickies.value?.plus(stickies)
+    fun addSticky(value: Float) {
+        _stickies.value = _stickies.value?.plus(Sticky(value, System.currentTimeMillis()))
+        _count.value = _count.value?.plus(value)
     }
 
 }
