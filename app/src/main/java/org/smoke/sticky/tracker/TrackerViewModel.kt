@@ -1,10 +1,9 @@
 package org.smoke.sticky.tracker
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
+import kotlinx.coroutines.launch
 
-class TrackerViewModel: ViewModel() {
+class TrackerViewModel(private val stickyDao: StickyDao): ViewModel() {
 
     private val _stickies = MutableLiveData<List<Sticky>>()
     val stickies: LiveData<List<Sticky>> = _stickies
@@ -21,9 +20,23 @@ class TrackerViewModel: ViewModel() {
         addSticky(1f)
     }
 
-    fun addSticky(value: Float) {
-        _stickies.value = _stickies.value?.plus(Sticky(value, System.currentTimeMillis()))
-        _count.value = _count.value?.plus(value)
+    fun addSticky(amount: Float) {
+        viewModelScope.launch {
+            val sticky = Sticky(amount = amount, timeMillis = System.currentTimeMillis())
+            stickyDao.insert(sticky)
+            _stickies.value = _stickies.value?.plus(sticky)
+            _count.value = _count.value?.plus(amount)
+        }
     }
 
+}
+
+class TrackerViewModelFactory(private val stickyDao: StickyDao) : ViewModelProvider.Factory {
+    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(TrackerViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return TrackerViewModel(stickyDao) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
+    }
 }
