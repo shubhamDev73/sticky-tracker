@@ -1,4 +1,4 @@
-package org.smoke.sticky.tracker
+package org.smoke.sticky.tracker.model
 
 import androidx.room.Dao
 import androidx.room.Insert

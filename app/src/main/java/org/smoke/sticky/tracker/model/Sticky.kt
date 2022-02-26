@@ -1,4 +1,4 @@
-package org.smoke.sticky.tracker
+package org.smoke.sticky.tracker.model
 
 import android.widget.TextView
 import androidx.databinding.BindingAdapter

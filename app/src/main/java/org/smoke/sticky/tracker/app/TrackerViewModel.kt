@@ -1,4 +1,4 @@
-package org.smoke.sticky.tracker
+package org.smoke.sticky.tracker.app
 
 import androidx.lifecycle.*
 import kotlinx.coroutines.Dispatchers
@@ -6,6 +6,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.smoke.sticky.tracker.model.Sticky
+import org.smoke.sticky.tracker.model.StickyDao
 import java.util.*
 
 class TrackerViewModel(private val stickyDao: StickyDao): ViewModel() {

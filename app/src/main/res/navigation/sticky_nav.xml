@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/sticky_nav"
+    app:startDestination="@id/stickyListFragment">
+
+    <fragment
+        android:id="@+id/stickyListFragment"
+        android:name="org.smoke.sticky.tracker.app.StickyListFragment"
+        android:label="StickyListFragment" />
+</navigation>
