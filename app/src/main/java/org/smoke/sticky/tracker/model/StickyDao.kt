@@ -15,4 +15,7 @@ interface StickyDao {
 
     @Query("SELECT * from sticky WHERE timeMillis >= :timeMillis ORDER BY timeMillis DESC")
     fun getRecentItems(timeMillis: Long): Flow<List<Sticky>>
+
+    @Query("SELECT * from sticky WHERE timeMillis >= :startTime AND timeMillis <= :endTime ORDER BY timeMillis DESC")
+    fun getRecentItems(startTime: Long, endTime: Long): Flow<List<Sticky>>
 }

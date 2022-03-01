@@ -6,16 +6,19 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.smoke.sticky.tracker.TimeUtils
 import org.smoke.sticky.tracker.model.Sticky
 import org.smoke.sticky.tracker.model.StickyDao
-import java.util.*
 
 class TrackerViewModel(private val stickyDao: StickyDao): ViewModel() {
 
-    suspend fun recentStickies(): Flow<List<Sticky>> = withContext(Dispatchers.IO) {
-        val lastDay = Calendar.getInstance()
-        lastDay.add(Calendar.DATE, -1)
-        stickyDao.getRecentItems(lastDay.timeInMillis)
+    suspend fun recentStickies(startTime: Long): Flow<List<Sticky>> = withContext(Dispatchers.IO) {
+        val time = if (startTime == 0L) {
+            TimeUtils.getTodayStartTime()
+        } else {
+            startTime
+        }
+        stickyDao.getRecentItems(time, time + TimeUtils.millisInDay)
     }
 
     private val _count = MutableLiveData<Float>()
@@ -24,7 +27,7 @@ class TrackerViewModel(private val stickyDao: StickyDao): ViewModel() {
     init {
         _count.value = 0f
         viewModelScope.launch {
-            recentStickies().collect {
+            recentStickies(0).collect {
                 var stickies = 0f
                 it.forEach { sticky -> stickies += sticky.amount }
                 _count.value = stickies

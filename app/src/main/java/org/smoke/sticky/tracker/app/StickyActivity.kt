@@ -6,6 +6,7 @@ import android.text.InputType
 import android.widget.EditText
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
+import androidx.navigation.findNavController
 import org.smoke.sticky.tracker.R
 import org.smoke.sticky.tracker.StickyApplication
 import org.smoke.sticky.tracker.databinding.StickyActivityBinding
@@ -36,6 +37,10 @@ class StickyActivity : AppCompatActivity() {
                 }
                 else -> false
             }
+        }
+        binding.topBar.setNavigationOnClickListener {
+            val action = StickyListFragmentDirections.actionStickyListFragmentToDayListFragment()
+            findNavController(binding.navHostFragment.id).navigate(action)
         }
     }
 

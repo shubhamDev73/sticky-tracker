@@ -7,5 +7,26 @@
     <fragment
         android:id="@+id/stickyListFragment"
         android:name="org.smoke.sticky.tracker.app.StickyListFragment"
-        android:label="StickyListFragment" />
+        android:label="StickyListFragment" >
+        <action
+            android:id="@+id/action_stickyListFragment_to_dayListFragment"
+            app:destination="@id/dayListFragment" />
+        <argument
+            android:name="startTime"
+            app:argType="long"
+            android:defaultValue="0L" />
+    </fragment>
+    <fragment
+        android:id="@+id/dayListFragment"
+        android:name="org.smoke.sticky.tracker.app.DayListFragment"
+        android:label="DayListFragment" >
+        <action
+            android:id="@+id/action_dayListFragment_to_stickyListFragment"
+            app:destination="@id/stickyListFragment">
+            <argument
+                android:name="startTime"
+                app:argType="long"
+                android:defaultValue="0L" />
+        </action>
+    </fragment>
 </navigation>

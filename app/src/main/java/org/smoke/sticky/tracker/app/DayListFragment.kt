@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.smoke.sticky.tracker.databinding.LayoutListBinding
 
@@ -17,7 +18,12 @@ class DayListFragment: Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = LayoutListBinding.inflate(inflater, container, false)
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
-        binding.recyclerView.adapter = DayListAdapter(dayViewModel.getWeek())
+        binding.recyclerView.adapter = DayListAdapter(dayViewModel.getWeek()) { day ->
+            day.startTime?.let { startTime ->
+                val action = DayListFragmentDirections.actionDayListFragmentToStickyListFragment(startTime = startTime)
+                findNavController().navigate(action)
+            }
+        }
         return binding.root
     }
 
