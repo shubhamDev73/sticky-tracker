@@ -1,5 +1,13 @@
 <resources>
     <string name="app_name">Sticky Tracker</string>
     <string name="cig_count">%s\'s Cigs: %.2f</string>
+    <string name="today">Today</string>
     <string name="add_sticky">Add sticky</string>
+    <string name="times0">12:00 AM</string>
+    <string name="times1">04:00 AM</string>
+    <string name="times2">08:00 AM</string>
+    <string name="times3">12:00 PM</string>
+    <string name="times4">04:00 PM</string>
+    <string name="times5">08:00 PM</string>
+    <string name="times6">12:00 AM</string>
 </resources>

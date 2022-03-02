@@ -61,12 +61,13 @@ class StickyActivity : AppCompatActivity() {
     }
 
     private fun assignLabel(day: Day, count: Float) {
-        binding.topBar.title = getString(R.string.cig_count, day.label, count)
+        val label = if (day.today) getString(R.string.today) else day.label
+        binding.topBar.title = getString(R.string.cig_count, label, count)
     }
 
     private fun observeTopBar() {
         dayViewModel.currentDay.observe(this) { day ->
-            binding.topBar.menu?.setGroupVisible(R.id.addStickyGroup, TimeUtils.isToday(day))
+            binding.topBar.menu?.setGroupVisible(R.id.addStickyGroup, day.today)
         }
     }
 

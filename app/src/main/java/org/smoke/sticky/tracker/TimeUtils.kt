@@ -20,28 +20,19 @@ class TimeUtils {
             val dayString = listOf("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday")
             val list = mutableListOf<Day>()
 
-            val dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK)
+            val dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1
             var startTime = getTodayStartTime() - dayOfWeek * millisInDay
             for (dayNumber in 0..7) {
                 val calendar = Calendar.getInstance()
                 calendar.timeInMillis = startTime
-                val day = if (dayNumber == dayOfWeek) {
-                    getToday()
-                } else {
-                    Day(startTime, dayString[calendar.get(Calendar.DAY_OF_WEEK) - 1], dayNumber <= dayOfWeek)
-                }
-                list.add(day)
+                list.add(Day(startTime, dayString[calendar.get(Calendar.DAY_OF_WEEK) - 1], dayNumber == dayOfWeek, dayNumber <= dayOfWeek))
                 startTime += millisInDay
             }
             return list
         }
 
         fun getToday(): Day {
-            return Day(getTodayStartTime(), "Today")
-        }
-
-        fun isToday(day: Day): Boolean {
-            return day.label == "Today"
+            return Day(getTodayStartTime(), "Today", today = true)
         }
     }
 }

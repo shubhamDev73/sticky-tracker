@@ -10,32 +10,39 @@
         <variable
             name="count"
             type="float" />
+        <import type="android.view.View" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="64dp">
+        android:layout_height="100dp">
 
         <TextView
             android:id="@+id/labelText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:text="@{day.label}"
+            android:text="@{day.label.substring(0, 1)}"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline2"
+            android:layout_marginEnd="96dp"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="Today" />
+            tools:text="T" />
 
         <TextView
             android:id="@+id/countText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
+            android:layout_marginStart="96dp"
             android:text="@{String.valueOf(count)}"
+            android:visibility="@{day.valid ? View.VISIBLE : View.GONE}"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline2"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="1" />
+            android:textAlignment="textStart"
+            tools:text="10" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
