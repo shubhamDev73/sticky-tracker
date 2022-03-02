@@ -1,9 +1,9 @@
-package org.smoke.sticky.tracker.app
+package org.smoke.sticky.tracker.day
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import org.smoke.sticky.tracker.TimeUtils
+import org.smoke.sticky.tracker.utils.TimeUtils
 import org.smoke.sticky.tracker.model.Day
 
 class DayViewModel: ViewModel() {

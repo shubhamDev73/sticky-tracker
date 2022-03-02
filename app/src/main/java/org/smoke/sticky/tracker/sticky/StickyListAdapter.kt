@@ -1,4 +1,4 @@
-package org.smoke.sticky.tracker.app
+package org.smoke.sticky.tracker.sticky
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

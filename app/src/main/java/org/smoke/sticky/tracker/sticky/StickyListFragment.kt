@@ -1,4 +1,4 @@
-package org.smoke.sticky.tracker.app
+package org.smoke.sticky.tracker.sticky
 
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -15,14 +15,14 @@ import androidx.navigation.fragment.navArgs
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.smoke.sticky.tracker.StickyApplication
-import org.smoke.sticky.tracker.TimeUtils
+import org.smoke.sticky.tracker.utils.TimeUtils
 import org.smoke.sticky.tracker.databinding.StickyListFragmentBinding
 
 class StickyListFragment: Fragment() {
 
     private lateinit var binding: StickyListFragmentBinding
-    private val trackerViewModel: TrackerViewModel by activityViewModels {
-        TrackerViewModelFactory((context?.applicationContext as StickyApplication).database.stickyDao())
+    private val stickyViewModel: StickyViewModel by activityViewModels {
+        StickyViewModelFactory((context?.applicationContext as StickyApplication).database.stickyDao())
     }
     private val args: StickyListFragmentArgs by navArgs()
 
@@ -47,7 +47,7 @@ class StickyListFragment: Fragment() {
 
         val day = args.day ?: TimeUtils.getToday()
         lifecycleScope.launch {
-            trackerViewModel.recentStickies(day).collect {
+            stickyViewModel.recentStickies(day).collect {
                 val circlePaint = Paint()
                 circlePaint.color = circleColor
                 it.forEach { sticky ->

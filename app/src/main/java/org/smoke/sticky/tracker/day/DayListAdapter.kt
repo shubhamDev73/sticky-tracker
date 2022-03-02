@@ -1,15 +1,16 @@
-package org.smoke.sticky.tracker.app
+package org.smoke.sticky.tracker.day
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
+import org.smoke.sticky.tracker.sticky.StickyViewModel
 import org.smoke.sticky.tracker.databinding.DayListElementBinding
 import org.smoke.sticky.tracker.model.Day
 
 class DayListAdapter(
     private val days: List<Day>,
-    private val trackerViewModel: TrackerViewModel,
+    private val stickyViewModel: StickyViewModel,
     private val onCLickListener: (Day) -> Unit
 ): RecyclerView.Adapter<DayListAdapter.ViewHolder>() {
 
@@ -24,7 +25,7 @@ class DayListAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val day = days[position]
         holder.binding.day = day
-        trackerViewModel.recent(day).observe(holder.binding.lifecycleOwner!!) {
+        stickyViewModel.recent(day).observe(holder.binding.lifecycleOwner!!) {
             holder.binding.count = it
         }
         holder.binding.root.setOnClickListener{ onCLickListener(day) }

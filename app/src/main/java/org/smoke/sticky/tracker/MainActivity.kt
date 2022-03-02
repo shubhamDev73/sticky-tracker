@@ -1,4 +1,4 @@
-package org.smoke.sticky.tracker.app
+package org.smoke.sticky.tracker
 
 import android.os.Bundle
 import android.text.InputType
@@ -10,17 +10,18 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import org.smoke.sticky.tracker.R
-import org.smoke.sticky.tracker.StickyApplication
-import org.smoke.sticky.tracker.TimeUtils
+import org.smoke.sticky.tracker.day.DayViewModel
+import org.smoke.sticky.tracker.sticky.StickyListFragmentDirections
+import org.smoke.sticky.tracker.sticky.StickyViewModel
+import org.smoke.sticky.tracker.sticky.StickyViewModelFactory
 import org.smoke.sticky.tracker.databinding.StickyActivityBinding
 import org.smoke.sticky.tracker.model.Day
 
-class StickyActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: StickyActivityBinding
-    private val trackerViewModel: TrackerViewModel by viewModels {
-        TrackerViewModelFactory((application as StickyApplication).database.stickyDao())
+    private val stickyViewModel: StickyViewModel by viewModels {
+        StickyViewModelFactory((application as StickyApplication).database.stickyDao())
     }
     private val dayViewModel: DayViewModel by viewModels()
 
@@ -31,7 +32,7 @@ class StickyActivity : AppCompatActivity() {
         binding.topBar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.add -> {
-                    trackerViewModel.addSticky()
+                    stickyViewModel.addSticky()
                     true
                 }
                 R.id.addMultiple -> {
@@ -53,7 +54,7 @@ class StickyActivity : AppCompatActivity() {
         dayViewModel.currentDay.observe(this) { day ->
             assignLabel(day, 0f)
             lifecycleScope.launch {
-                trackerViewModel.recentCount(day).collect {
+                stickyViewModel.recentCount(day).collect {
                     assignLabel(day, it ?: 0f)
                 }
             }
@@ -82,7 +83,7 @@ class StickyActivity : AppCompatActivity() {
             .setMessage("How many cigs you smoked?")
             .setView(input)
             .setPositiveButton("Add") { _, _ ->
-                input.text.toString().toFloatOrNull()?.let { trackerViewModel.addSticky(it) }
+                input.text.toString().toFloatOrNull()?.let { stickyViewModel.addSticky(it) }
             }
             .create()
             .show()

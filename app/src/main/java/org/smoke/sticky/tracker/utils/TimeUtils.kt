@@ -1,4 +1,4 @@
-package org.smoke.sticky.tracker
+package org.smoke.sticky.tracker.utils
 
 import org.smoke.sticky.tracker.model.Day
 import java.util.*
