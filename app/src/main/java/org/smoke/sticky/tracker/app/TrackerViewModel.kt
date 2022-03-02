@@ -3,6 +3,7 @@ package org.smoke.sticky.tracker.app
 import androidx.lifecycle.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.smoke.sticky.tracker.TimeUtils
@@ -18,6 +19,16 @@ class TrackerViewModel(private val stickyDao: StickyDao): ViewModel() {
 
     suspend fun recentCount(day: Day): Flow<Float?> = withContext(Dispatchers.IO) {
         stickyDao.getRecentCount(day.startTime, day.startTime + TimeUtils.millisInDay)
+    }
+
+    fun recent(day: Day): LiveData<Float> {
+        val count = MutableLiveData(0f)
+        viewModelScope.launch {
+            recentCount(day).collect {
+                count.value = it ?: 0f
+            }
+        }
+        return count
     }
 
     fun addSticky() {

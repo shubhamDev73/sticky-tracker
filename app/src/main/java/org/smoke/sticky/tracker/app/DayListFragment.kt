@@ -8,17 +8,21 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import org.smoke.sticky.tracker.StickyApplication
 import org.smoke.sticky.tracker.databinding.LayoutListBinding
 
 class DayListFragment: Fragment() {
 
     private lateinit var binding: LayoutListBinding
     private val dayViewModel: DayViewModel by activityViewModels()
+    private val trackerViewModel: TrackerViewModel by activityViewModels {
+        TrackerViewModelFactory((context?.applicationContext as StickyApplication).database.stickyDao())
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = LayoutListBinding.inflate(inflater, container, false)
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
-        binding.recyclerView.adapter = DayListAdapter(dayViewModel.getWeek()) { day ->
+        binding.recyclerView.adapter = DayListAdapter(dayViewModel.getWeek(), trackerViewModel) { day ->
             if (day.valid) {
                 val action = DayListFragmentDirections.actionDayListFragmentToStickyListFragment(day = day)
                 findNavController().navigate(action)

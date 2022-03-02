@@ -7,6 +7,9 @@
         <variable
             name="day"
             type="org.smoke.sticky.tracker.model.Day" />
+        <variable
+            name="count"
+            type="float" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -14,22 +17,22 @@
         android:layout_height="64dp">
 
         <TextView
-            android:id="@+id/date"
+            android:id="@+id/labelText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:date="@{day.startTime}"
+            android:text="@{day.label}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="26-Feb-2022 2:02:01 pm" />
+            tools:text="Today" />
 
         <TextView
-            android:id="@+id/amount"
+            android:id="@+id/countText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
-            android:text="@{day.label}"
+            android:text="@{String.valueOf(count)}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
