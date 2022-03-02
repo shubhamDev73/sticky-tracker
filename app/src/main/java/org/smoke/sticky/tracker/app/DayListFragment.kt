@@ -19,9 +19,10 @@ class DayListFragment: Fragment() {
         binding = LayoutListBinding.inflate(inflater, container, false)
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
         binding.recyclerView.adapter = DayListAdapter(dayViewModel.getWeek()) { day ->
-            day.startTime?.let { startTime ->
-                val action = DayListFragmentDirections.actionDayListFragmentToStickyListFragment(startTime = startTime)
+            if (day.valid) {
+                val action = DayListFragmentDirections.actionDayListFragmentToStickyListFragment(day = day)
                 findNavController().navigate(action)
+                dayViewModel.setCurrentDay(day)
             }
         }
         return binding.root

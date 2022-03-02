@@ -1,3 +1,7 @@
 package org.smoke.sticky.tracker.model
 
-data class Day(val startTime: Long? = null, val label: String)
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
+@Parcelize
+data class Day(val startTime: Long, val label: String, val valid: Boolean = true) : Parcelable

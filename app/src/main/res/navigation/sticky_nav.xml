@@ -12,9 +12,10 @@
             android:id="@+id/action_stickyListFragment_to_dayListFragment"
             app:destination="@id/dayListFragment" />
         <argument
-            android:name="startTime"
-            app:argType="long"
-            android:defaultValue="0L" />
+            android:name="day"
+            app:argType="org.smoke.sticky.tracker.model.Day"
+            app:nullable="true"
+            android:defaultValue="@null" />
     </fragment>
     <fragment
         android:id="@+id/dayListFragment"
@@ -24,9 +25,10 @@
             android:id="@+id/action_dayListFragment_to_stickyListFragment"
             app:destination="@id/stickyListFragment">
             <argument
-                android:name="startTime"
-                app:argType="long"
-                android:defaultValue="0L" />
+                android:name="day"
+                app:argType="org.smoke.sticky.tracker.model.Day"
+                app:nullable="true"
+                android:defaultValue="@null" />
         </action>
     </fragment>
 </navigation>

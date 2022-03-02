@@ -1,29 +1,32 @@
 package org.smoke.sticky.tracker.app
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.InputType
 import android.widget.EditText
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import org.smoke.sticky.tracker.R
 import org.smoke.sticky.tracker.StickyApplication
+import org.smoke.sticky.tracker.TimeUtils
 import org.smoke.sticky.tracker.databinding.StickyActivityBinding
+import org.smoke.sticky.tracker.model.Day
 
 class StickyActivity : AppCompatActivity() {
 
     private lateinit var binding: StickyActivityBinding
-    private val trackerViewModel: TrackerViewModel by viewModels{
+    private val trackerViewModel: TrackerViewModel by viewModels {
         TrackerViewModelFactory((application as StickyApplication).database.stickyDao())
     }
+    private val dayViewModel: DayViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = StickyActivityBinding.inflate(layoutInflater).also {
-            it.viewModel = trackerViewModel
-            it.lifecycleOwner = this
-        }
+        binding = StickyActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.topBar.setOnMenuItemClickListener {
             when (it.itemId) {
@@ -41,6 +44,29 @@ class StickyActivity : AppCompatActivity() {
         binding.topBar.setNavigationOnClickListener {
             val action = StickyListFragmentDirections.actionStickyListFragmentToDayListFragment()
             findNavController(binding.navHostFragment.id).navigate(action)
+        }
+        observeLabel()
+        observeTopBar()
+    }
+
+    private fun observeLabel() {
+        dayViewModel.currentDay.observe(this) { day ->
+            assignLabel(day, 0f)
+            lifecycleScope.launch {
+                trackerViewModel.recentCount(day).collect {
+                    assignLabel(day, it ?: 0f)
+                }
+            }
+        }
+    }
+
+    private fun assignLabel(day: Day, count: Float) {
+        binding.topBar.title = getString(R.string.cig_count, day.label, count)
+    }
+
+    private fun observeTopBar() {
+        dayViewModel.currentDay.observe(this) { day ->
+            binding.topBar.menu?.setGroupVisible(R.id.addStickyGroup, TimeUtils.isToday(day))
         }
     }
 

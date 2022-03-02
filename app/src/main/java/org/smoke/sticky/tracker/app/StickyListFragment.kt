@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.smoke.sticky.tracker.StickyApplication
+import org.smoke.sticky.tracker.TimeUtils
 import org.smoke.sticky.tracker.databinding.LayoutListBinding
 
 class StickyListFragment: Fragment() {
@@ -25,8 +26,9 @@ class StickyListFragment: Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = LayoutListBinding.inflate(inflater, container, false)
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
+        val day = args.day ?: TimeUtils.getToday()
         lifecycleScope.launch {
-            trackerViewModel.recentStickies(args.startTime).collect {
+            trackerViewModel.recentStickies(day).collect {
                 binding.recyclerView.adapter = StickyListAdapter(it)
             }
         }

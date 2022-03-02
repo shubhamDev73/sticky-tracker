@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">Sticky Tracker</string>
-    <string name="today_cigs">Today\'s Cigs: %.2f</string>
+    <string name="cig_count">%s\'s Cigs: %.2f</string>
     <string name="add_sticky">Add sticky</string>
 </resources>

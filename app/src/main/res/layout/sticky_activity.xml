@@ -3,12 +3,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <data>
-        <variable
-            name="viewModel"
-            type="org.smoke.sticky.tracker.app.TrackerViewModel" />
-    </data>
-
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -24,7 +18,7 @@
                 app:menu="@menu/top_bar"
                 style="@style/Widget.MaterialComponents.Toolbar.Primary"
                 app:navigationIcon="?attr/actionModeCloseDrawable"
-                app:title="@{@string/today_cigs(viewModel.count)}" />
+                app:title="@string/cig_count" />
 
         </com.google.android.material.appbar.AppBarLayout>
 

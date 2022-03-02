@@ -8,7 +8,7 @@ class TimeUtils {
     companion object {
         const val millisInDay: Long = 24 * 60 * 60 * 1000
 
-        fun getTodayStartTime(): Long {
+        private fun getTodayStartTime(): Long {
             val currentDate = Calendar.getInstance()
             currentDate.set(Calendar.HOUR_OF_DAY, 0)
             currentDate.set(Calendar.MINUTE, 0)
@@ -22,14 +22,26 @@ class TimeUtils {
 
             val dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK)
             var startTime = getTodayStartTime() - dayOfWeek * millisInDay
-            for (day in 0..7) {
+            for (dayNumber in 0..7) {
                 val calendar = Calendar.getInstance()
                 calendar.timeInMillis = startTime
-                val time = if (day <= dayOfWeek) startTime else null
-                list.add(Day(time, dayString[calendar.get(Calendar.DAY_OF_WEEK) - 1]))
+                val day = if (dayNumber == dayOfWeek) {
+                    getToday()
+                } else {
+                    Day(startTime, dayString[calendar.get(Calendar.DAY_OF_WEEK) - 1], dayNumber <= dayOfWeek)
+                }
+                list.add(day)
                 startTime += millisInDay
             }
             return list
+        }
+
+        fun getToday(): Day {
+            return Day(getTodayStartTime(), "Today")
+        }
+
+        fun isToday(day: Day): Boolean {
+            return day.label == "Today"
         }
     }
 }
