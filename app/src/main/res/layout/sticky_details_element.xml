@@ -32,5 +32,14 @@
             app:layout_constraintStart_toEndOf="@id/stickyTime"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="1" />
+
+        <ImageButton
+            android:id="@+id/deleteButton"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="10dp"
+            app:layout_constraintStart_toEndOf="@id/stickyAmount"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@android:drawable/ic_menu_delete" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -25,7 +25,7 @@ class DayListAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val day = days[position]
         holder.binding.day = day
-        stickyViewModel.recent(day).observe(holder.binding.lifecycleOwner!!) {
+        stickyViewModel.recentCount(day).observe(holder.binding.lifecycleOwner!!) {
             holder.binding.count = it
         }
         holder.binding.root.setOnClickListener{ onCLickListener(day) }

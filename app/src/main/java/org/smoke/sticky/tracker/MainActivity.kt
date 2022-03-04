@@ -6,16 +6,13 @@ import android.widget.EditText
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
+import org.smoke.sticky.tracker.databinding.StickyActivityBinding
 import org.smoke.sticky.tracker.day.DayViewModel
+import org.smoke.sticky.tracker.model.Day
 import org.smoke.sticky.tracker.sticky.StickyListFragmentDirections
 import org.smoke.sticky.tracker.sticky.StickyViewModel
 import org.smoke.sticky.tracker.sticky.StickyViewModelFactory
-import org.smoke.sticky.tracker.databinding.StickyActivityBinding
-import org.smoke.sticky.tracker.model.Day
 
 class MainActivity : AppCompatActivity() {
 
@@ -53,10 +50,8 @@ class MainActivity : AppCompatActivity() {
     private fun observeLabel() {
         dayViewModel.currentDay.observe(this) { day ->
             assignLabel(day, 0f)
-            lifecycleScope.launch {
-                stickyViewModel.recentCount(day).collect {
-                    assignLabel(day, it ?: 0f)
-                }
+            stickyViewModel.recentCount(day).observe(this) {
+                assignLabel(day, it ?: 0f)
             }
         }
     }

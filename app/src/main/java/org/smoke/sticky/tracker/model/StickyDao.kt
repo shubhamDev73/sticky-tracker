@@ -1,6 +1,7 @@
 package org.smoke.sticky.tracker.model
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
@@ -9,6 +10,9 @@ import kotlinx.coroutines.flow.Flow
 interface StickyDao {
     @Insert
     suspend fun insert(sticky: Sticky)
+
+    @Delete
+    suspend fun delete(sticky: Sticky)
 
     @Query("SELECT * from sticky WHERE id = :id")
     fun getItem(id: Int): Flow<Sticky>

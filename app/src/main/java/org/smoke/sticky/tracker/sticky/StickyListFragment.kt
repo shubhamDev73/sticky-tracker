@@ -6,10 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 import org.smoke.sticky.tracker.StickyApplication
 import org.smoke.sticky.tracker.databinding.LayoutFragmentBinding
 import org.smoke.sticky.tracker.ui.TimelineZoomView
@@ -26,13 +23,13 @@ class StickyListFragment: Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = LayoutFragmentBinding.inflate(inflater, container, false)
         val day = args.day ?: TimeUtils.getToday()
-        val timeline = TimelineZoomView(requireContext(), day)
+        val timeline = TimelineZoomView(requireContext(), day) {
+            stickyViewModel.delete(it)
+        }
         binding.constraintLayout.addView(timeline)
 
-        lifecycleScope.launch {
-            stickyViewModel.recentStickies(day).collect {
-                timeline.stickies.postValue(it)
-            }
+        stickyViewModel.recentStickies(day).observe(viewLifecycleOwner) {
+            timeline.stickies.postValue(it)
         }
         return binding.root
     }

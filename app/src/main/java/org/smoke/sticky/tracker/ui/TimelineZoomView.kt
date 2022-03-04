@@ -4,13 +4,18 @@ import android.content.Context
 import android.view.*
 import android.widget.RelativeLayout
 import androidx.core.view.doOnAttach
+import androidx.core.view.isVisible
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import org.smoke.sticky.tracker.databinding.StickyDetailsElementBinding
 import org.smoke.sticky.tracker.model.Day
 import org.smoke.sticky.tracker.model.Sticky
 
-class TimelineZoomView(context: Context, day: Day): RelativeLayout(context) {
+class TimelineZoomView(
+    context: Context,
+    private val day: Day,
+    private val onDelete: (Sticky) -> Unit
+): RelativeLayout(context) {
 
     private val zoomViewModel = ZoomViewModel()
     private val timelineView = TimelineView(context, day, zoomViewModel)
@@ -65,6 +70,10 @@ class TimelineZoomView(context: Context, day: Day): RelativeLayout(context) {
     private fun createStickyDetail(sticky: Sticky) {
         val binding = StickyDetailsElementBinding.inflate(LayoutInflater.from(context), this, false)
         binding.sticky = sticky
+        binding.deleteButton.isVisible = day.today
+        binding.deleteButton.setOnClickListener {
+            onDelete(sticky)
+        }
         stickyBindings.add(StickyBinding(sticky, binding))
         addView(binding.root)
         binding.root.x = resources.displayMetrics.widthPixels / 2f + 20f
