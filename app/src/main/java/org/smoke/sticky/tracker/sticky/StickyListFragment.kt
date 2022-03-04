@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.smoke.sticky.tracker.StickyApplication
 import org.smoke.sticky.tracker.databinding.LayoutFragmentBinding
-import org.smoke.sticky.tracker.ui.TimelineView
+import org.smoke.sticky.tracker.ui.TimelineZoomView
 import org.smoke.sticky.tracker.utils.TimeUtils
 
 class StickyListFragment: Fragment() {
@@ -26,12 +26,12 @@ class StickyListFragment: Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = LayoutFragmentBinding.inflate(inflater, container, false)
         val day = args.day ?: TimeUtils.getToday()
-        val timelineView = TimelineView(requireContext(), day)
-        binding.constraintLayout.addView(timelineView)
+        val timeline = TimelineZoomView(requireContext(), day)
+        binding.constraintLayout.addView(timeline)
 
         lifecycleScope.launch {
             stickyViewModel.recentStickies(day).collect {
-                timelineView.stickies.postValue(it)
+                timeline.stickies.postValue(it)
             }
         }
         return binding.root

@@ -15,8 +15,7 @@ data class Sticky(
     val timeMillis: Long,
 )
 
-@BindingAdapter("android:date")
+@BindingAdapter("android:time")
 fun displayTimeAsDate(view: TextView, timeMillis: Long) {
-    // TODO: better format
-    view.text = SimpleDateFormat.getDateTimeInstance(SimpleDateFormat.MEDIUM, SimpleDateFormat.MEDIUM, Locale.getDefault()).format(timeMillis)
+    view.text = SimpleDateFormat.getTimeInstance(SimpleDateFormat.MEDIUM, Locale.getDefault()).format(timeMillis)
 }

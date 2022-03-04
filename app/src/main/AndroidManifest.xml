@@ -12,6 +12,7 @@
         android:theme="@style/Theme.StickyTracker">
         <activity
             android:name=".MainActivity"
+            android:hardwareAccelerated="false"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

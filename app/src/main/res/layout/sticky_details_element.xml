@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="sticky"
+            type="org.smoke.sticky.tracker.model.Sticky" />
+        <import type="android.view.View" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/stickyTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:time="@{sticky.timeMillis}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="03:00 AM" />
+
+        <TextView
+            android:id="@+id/stickyAmount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{String.valueOf(sticky.amount)}"
+            android:layout_marginStart="10dp"
+            app:layout_constraintStart_toEndOf="@id/stickyTime"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="1" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
