@@ -4,8 +4,7 @@ import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.text.SimpleDateFormat
-import java.util.*
+import org.smoke.sticky.tracker.utils.TimeUtils
 
 @Entity(tableName = "sticky")
 data class Sticky(
@@ -17,5 +16,5 @@ data class Sticky(
 
 @BindingAdapter("android:time")
 fun displayTimeAsDate(view: TextView, timeMillis: Long) {
-    view.text = SimpleDateFormat.getTimeInstance(SimpleDateFormat.MEDIUM, Locale.getDefault()).format(timeMillis)
+    view.text = TimeUtils.getTimeString(timeMillis)
 }

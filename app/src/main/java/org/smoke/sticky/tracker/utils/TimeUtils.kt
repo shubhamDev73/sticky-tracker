@@ -1,6 +1,7 @@
 package org.smoke.sticky.tracker.utils
 
 import org.smoke.sticky.tracker.model.Day
+import java.text.SimpleDateFormat
 import java.util.*
 
 class TimeUtils {
@@ -14,6 +15,10 @@ class TimeUtils {
             currentDate.set(Calendar.MINUTE, 0)
             currentDate.set(Calendar.SECOND, 0)
             return currentDate.timeInMillis
+        }
+
+        fun getCurrentTime(): Long {
+            return Calendar.getInstance().timeInMillis
         }
 
         fun generateWeek(): List<Day> {
@@ -34,5 +39,7 @@ class TimeUtils {
         fun getToday(): Day {
             return Day(getTodayStartTime(), "Today", today = true)
         }
+
+        fun getTimeString(timeMillis: Long): String =  SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT, Locale.getDefault()).format(timeMillis).uppercase()
     }
 }

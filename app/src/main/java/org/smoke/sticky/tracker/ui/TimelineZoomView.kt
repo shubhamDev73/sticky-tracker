@@ -10,6 +10,7 @@ import androidx.lifecycle.findViewTreeLifecycleOwner
 import org.smoke.sticky.tracker.databinding.StickyDetailsElementBinding
 import org.smoke.sticky.tracker.model.Day
 import org.smoke.sticky.tracker.model.Sticky
+import org.smoke.sticky.tracker.utils.TimeUtils
 
 class TimelineZoomView(
     context: Context,
@@ -25,6 +26,7 @@ class TimelineZoomView(
     private val stickyBindings = mutableListOf<StickyBinding>()
 
     val stickies = MutableLiveData<List<Sticky>>()
+    private var adjustedTop = false
 
     init {
         layoutParams = params
@@ -37,6 +39,15 @@ class TimelineZoomView(
                     refresh()
                 }
                 stickies.observe(it) { stickies ->
+                    if (!adjustedTop) {
+                        if (day.today) {
+                            zoomViewModel.scale = 5f
+                            zoomViewModel.position = 100f - timelineView.getPosition(TimeUtils.getCurrentTime())
+                            clamp()
+                            invalidate()
+                            adjustedTop = true
+                        }
+                    }
                     refresh(stickies)
                 }
             }
@@ -47,8 +58,9 @@ class TimelineZoomView(
     private fun refresh() {
         timelineView.refresh()
         stickyBindings.forEach {
-            it.binding.root.y = timelineView.getPosition(it.sticky) * zoomViewModel.scale - 24f
+            it.binding.root.y = getPosition(it.sticky)
         }
+        invalidate()
     }
 
     private fun refresh(stickies: List<Sticky>) {
@@ -65,6 +77,7 @@ class TimelineZoomView(
             removeView(it.binding.root)
         }
         stickyBindings.removeIf { !stickies.contains(it.sticky) }
+        invalidate()
     }
 
     private fun createStickyDetail(sticky: Sticky) {
@@ -77,7 +90,7 @@ class TimelineZoomView(
         stickyBindings.add(StickyBinding(sticky, binding))
         addView(binding.root)
         binding.root.x = resources.displayMetrics.widthPixels / 2f + 20f
-        binding.root.y = timelineView.getPosition(sticky) * zoomViewModel.scale - 24f
+        binding.root.y = getPosition(sticky)
     }
 
     override fun onTouchEvent(ev: MotionEvent?): Boolean {
@@ -115,6 +128,10 @@ class TimelineZoomView(
         } else {
             zoomViewModel.position.coerceAtLeast(limit).coerceAtMost(0f)
         }
+    }
+
+    private fun getPosition(sticky: Sticky): Float {
+        return timelineView.getPosition(sticky) * zoomViewModel.scale - 24f
     }
 
     private data class StickyBinding(val sticky: Sticky, val binding: StickyDetailsElementBinding)

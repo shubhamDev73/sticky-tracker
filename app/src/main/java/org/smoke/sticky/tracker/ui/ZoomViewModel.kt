@@ -5,9 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class ZoomViewModel: ViewModel() {
-    private val _scale = MutableLiveData(1f)
+    private val _scale = MutableLiveData<Float>()
     var scaleData: LiveData<Float> = _scale
-    private val _position = MutableLiveData(0f)
+    private val _position = MutableLiveData<Float>()
     var positionData: LiveData<Float> = _position
 
     var scale
