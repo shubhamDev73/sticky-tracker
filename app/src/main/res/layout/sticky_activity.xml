@@ -18,7 +18,7 @@
                 app:menu="@menu/top_bar"
                 style="@style/Widget.MaterialComponents.Toolbar.Primary"
                 app:navigationIcon="?attr/actionModeCloseDrawable"
-                app:title="@string/cig_count" />
+                app:title="@string/sticky_count" />
 
         </com.google.android.material.appbar.AppBarLayout>
 
@@ -29,6 +29,6 @@
             android:layout_height="match_parent"
             app:defaultNavHost="true"
             app:navGraph="@navigation/sticky_nav"
-            tools:layout="@layout/layout_list" />
+            tools:layout="@layout/day_list_fragment" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

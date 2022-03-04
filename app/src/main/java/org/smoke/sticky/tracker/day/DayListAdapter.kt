@@ -28,7 +28,7 @@ class DayListAdapter(
         stickyViewModel.recentCount(day).observe(holder.binding.lifecycleOwner!!) {
             holder.binding.count = it
         }
-        holder.binding.root.setOnClickListener{ onCLickListener(day) }
+        holder.binding.button.setOnClickListener{ onCLickListener(day) }
     }
 
     override fun getItemCount(): Int {

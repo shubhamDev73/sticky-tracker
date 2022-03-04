@@ -1,5 +1,6 @@
 package org.smoke.sticky.tracker
 
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.InputType
 import android.widget.EditText
@@ -17,6 +18,7 @@ import org.smoke.sticky.tracker.sticky.StickyViewModelFactory
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: StickyActivityBinding
+    private lateinit var navigationIcon: Drawable
     private val stickyViewModel: StickyViewModel by viewModels {
         StickyViewModelFactory((application as StickyApplication).database.stickyDao())
     }
@@ -26,6 +28,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = StickyActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        navigationIcon = binding.topBar.navigationIcon!!
         binding.topBar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.add -> {
@@ -40,8 +43,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
         binding.topBar.setNavigationOnClickListener {
-            val action = StickyListFragmentDirections.actionStickyListFragmentToDayListFragment()
-            findNavController(binding.navHostFragment.id).navigate(action)
+            onBackPressed()
         }
         observeLabel()
         observeTopBar()
@@ -50,38 +52,58 @@ class MainActivity : AppCompatActivity() {
     private fun observeLabel() {
         dayViewModel.currentDay.observe(this) { day ->
             assignLabel(day, 0f)
-            stickyViewModel.recentCount(day).observe(this) {
-                assignLabel(day, it ?: 0f)
+            day?.let {
+                stickyViewModel.recentCount(day).observe(this) {
+                    assignLabel(day, it ?: 0f)
+                }
             }
         }
     }
 
-    private fun assignLabel(day: Day, count: Float) {
-        val label = if (day.today) getString(R.string.today) else day.label
-        binding.topBar.title = getString(R.string.cig_count, label, count)
+    private fun assignLabel(day: Day?, count: Float) {
+        if (day == null) {
+            binding.topBar.title = getString(R.string.week_label)
+        } else {
+            val label = if (day.today) getString(R.string.today) else day.label
+            binding.topBar.title = getString(R.string.sticky_count, label, count)
+        }
     }
 
     private fun observeTopBar() {
         dayViewModel.currentDay.observe(this) { day ->
-            binding.topBar.menu?.setGroupVisible(R.id.addStickyGroup, day.today)
+            binding.topBar.navigationIcon = if (day == null) null else navigationIcon
+            binding.topBar.menu?.setGroupVisible(R.id.addStickyGroup, day?.today ?: false)
         }
     }
 
     private fun addStickyDialog() {
         val input = EditText(this).apply {
-            hint = "Enter Cigs"
+            hint = getString(R.string.add_stickies_dialog_placeholder)
             inputType = InputType.TYPE_CLASS_TEXT
         }
 
         AlertDialog.Builder(this)
-            .setTitle("Add multiple cigs")
-            .setMessage("How many cigs you smoked?")
+            .setTitle(R.string.add_stickies_dialog_title)
+            .setMessage(R.string.add_stickies_dialog_message)
             .setView(input)
-            .setPositiveButton("Add") { _, _ ->
+            .setPositiveButton(R.string.add) { _, _ ->
                 input.text.toString().toFloatOrNull()?.let { stickyViewModel.addSticky(it) }
+            }
+            .setNegativeButton(R.string.cancel) { dialog, _ ->
+                dialog.cancel()
             }
             .create()
             .show()
+    }
+
+    override fun onBackPressed() {
+        if (dayViewModel.currentDay.value == null) {
+            finish()
+        } else {
+            val action = StickyListFragmentDirections.actionStickyListFragmentToDayListFragment()
+            findNavController(binding.navHostFragment.id).navigate(action)
+            dayViewModel.setCurrentDay(null)
+        }
     }
 
 }

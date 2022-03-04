@@ -15,34 +15,54 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="100dp">
+        android:layout_height="90dp">
 
-        <TextView
-            android:id="@+id/labelText"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/button"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@{day.label.substring(0, 1)}"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline2"
-            android:layout_marginEnd="96dp"
+            android:layout_height="match_parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="T" />
+            app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/countText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="96dp"
-            android:text="@{String.valueOf(count)}"
-            android:visibility="@{day.valid ? View.VISIBLE : View.GONE}"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline2"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:textAlignment="textStart"
-            tools:text="10" />
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="86dp"
+                android:layout_height="86dp"
+                android:tint="@{day.valid ? (day.today ? @color/teal_200 : @color/teal_700) : @color/black}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@android:drawable/presence_online" />
+
+            <TextView
+                android:id="@+id/labelText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{day.label.substring(0, 1)}"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline2"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="T" />
+
+            <TextView
+                android:id="@+id/countText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="84dp"
+                android:layout_marginTop="8dp"
+                android:text="@{String.valueOf(count)}"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+                android:visibility="@{day.valid ? View.VISIBLE : View.GONE}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="10" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
