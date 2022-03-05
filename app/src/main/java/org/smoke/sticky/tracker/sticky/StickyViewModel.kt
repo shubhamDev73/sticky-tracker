@@ -11,21 +11,22 @@ import org.smoke.sticky.tracker.model.StickyDao
 
 class StickyViewModel(private val stickyDao: StickyDao): ViewModel() {
 
-    fun recentStickies(day: Day): LiveData<List<Sticky>>{
-        val stickies = MutableLiveData<List<Sticky>>()
+    private val _stickies = MutableLiveData<List<Sticky>>()
+    val stickies: LiveData<List<Sticky>> = _stickies
+
+    fun updateDay(day: Day) {
         viewModelScope.launch(Dispatchers.IO) {
             stickyDao.getRecentItems(day.startTime, day.startTime + TimeUtils.millisInDay).collect {
-                stickies.postValue(it)
+                _stickies.postValue(it)
             }
         }
-        return stickies
     }
 
     fun recentCount(day: Day): LiveData<Float> {
         val count = MutableLiveData(0f)
         viewModelScope.launch(Dispatchers.IO) {
-            stickyDao.getRecentCount(day.startTime, day.startTime + TimeUtils.millisInDay).collect {
-                count.postValue(it ?: 0f)
+            stickyDao.getRecentItems(day.startTime, day.startTime + TimeUtils.millisInDay).collect { stickies ->
+                count.postValue(stickies.sumOf { it.amount.toDouble() }.toFloat())
             }
         }
         return count

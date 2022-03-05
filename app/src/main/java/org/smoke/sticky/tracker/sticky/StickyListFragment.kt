@@ -22,15 +22,19 @@ class StickyListFragment: Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = LayoutFragmentBinding.inflate(inflater, container, false)
+
         val day = args.day ?: TimeUtils.getToday()
+        stickyViewModel.updateDay(day)
+
         val timeline = TimelineZoomView(requireContext(), day) {
             stickyViewModel.delete(it)
         }
         binding.constraintLayout.addView(timeline)
 
-        stickyViewModel.recentStickies(day).observe(viewLifecycleOwner) {
+        stickyViewModel.stickies.observe(viewLifecycleOwner) {
             timeline.stickies.postValue(it)
         }
+
         return binding.root
     }
 
