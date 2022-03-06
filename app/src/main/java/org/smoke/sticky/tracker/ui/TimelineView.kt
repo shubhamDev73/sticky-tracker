@@ -65,6 +65,7 @@ class TimelineView(
         val textMarginRight = scaled(250f)
 
         // line
+        paint.color = COLOR
         paint.strokeWidth = scaled(LINE_STROKE_WIDTH)
         mCanvas.drawLine(getCentre(), zoomViewModel.position, getCentre(), zoomViewModel.position + height, paint)
 
@@ -96,6 +97,7 @@ class TimelineView(
         if(!::stickies.isInitialized) return
 
         stickies.forEach { sticky ->
+            paint.color = context.getColor(sticky.tag.color)
             mCanvas.drawCircle(getCentre(), getPosition(sticky), scaled(CIRCLE_RADIUS), paint)
         }
     }

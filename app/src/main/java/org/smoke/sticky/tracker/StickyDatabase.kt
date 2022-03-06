@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import org.smoke.sticky.tracker.model.Sticky
 import org.smoke.sticky.tracker.model.StickyDao
 
-@Database(entities = [Sticky::class], version = 1, exportSchema = false)
+@Database(entities = [Sticky::class], version = 2, exportSchema = false)
 abstract class StickyDatabase: RoomDatabase() {
     abstract fun stickyDao(): StickyDao
 

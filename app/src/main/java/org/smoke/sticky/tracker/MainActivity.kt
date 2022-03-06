@@ -1,16 +1,22 @@
 package org.smoke.sticky.tracker
 
+import android.content.DialogInterface
+import android.content.res.ColorStateList
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.Icon
 import android.os.Bundle
 import android.text.InputType
 import android.widget.EditText
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.navigation.findNavController
+import org.smoke.sticky.tracker.databinding.FloatingActionButtonBinding
 import org.smoke.sticky.tracker.databinding.StickyActivityBinding
 import org.smoke.sticky.tracker.day.DayViewModel
 import org.smoke.sticky.tracker.model.Day
+import org.smoke.sticky.tracker.model.Tag
 import org.smoke.sticky.tracker.sticky.StickyListFragmentDirections
 import org.smoke.sticky.tracker.sticky.StickyViewModel
 import org.smoke.sticky.tracker.sticky.StickyViewModelFactory
@@ -31,12 +37,8 @@ class MainActivity : AppCompatActivity() {
         navigationIcon = binding.topBar.navigationIcon!!
         binding.topBar.setOnMenuItemClickListener {
             when (it.itemId) {
-                R.id.add -> {
-                    stickyViewModel.addSticky()
-                    true
-                }
-                R.id.addMultiple -> {
-                    addStickyDialog()
+                R.id.filter -> {
+                    filterStickyDialog()
                     true
                 }
                 else -> false
@@ -47,14 +49,18 @@ class MainActivity : AppCompatActivity() {
         }
         observeLabel()
         observeTopBar()
+        addOptions()
     }
 
     private fun observeLabel() {
         dayViewModel.currentDay.observe(this) { day ->
             assignLabel(day, 0f)
+            stickyViewModel.tags.removeObservers(this)
             day?.let {
-                stickyViewModel.recentCount(day).observe(this) {
-                    assignLabel(day, it ?: 0f)
+                stickyViewModel.tags.observe(this) {
+                    stickyViewModel.recentCount(day).observe(this) {
+                        assignLabel(day, it ?: 0f)
+                    }
                 }
             }
         }
@@ -72,11 +78,29 @@ class MainActivity : AppCompatActivity() {
     private fun observeTopBar() {
         dayViewModel.currentDay.observe(this) { day ->
             binding.topBar.navigationIcon = if (day == null) null else navigationIcon
-            binding.topBar.menu?.setGroupVisible(R.id.addStickyGroup, day?.today ?: false)
+            binding.addOptions.isVisible = day != null
         }
     }
 
-    private fun addStickyDialog() {
+    private fun addOptions() {
+        Tag.values().forEach { tag ->
+            val fab = FloatingActionButtonBinding.inflate(layoutInflater, binding.addOptions, false)
+            fab.floatingActionButton.setImageIcon(Icon.createWithResource(applicationContext, tag.icon))
+            val states = arrayOf(intArrayOf(android.R.attr.state_enabled))
+            val colors = intArrayOf(getColor(tag.color))
+            fab.floatingActionButton.backgroundTintList = ColorStateList(states, colors)
+            binding.addOptions.addView(fab.root)
+            fab.floatingActionButton.setOnClickListener {
+                stickyViewModel.addSticky(tag)
+            }
+            fab .floatingActionButton.setOnLongClickListener {
+                addStickyDialog(tag)
+                true
+            }
+        }
+    }
+
+    private fun addStickyDialog(defaultTag: Tag) {
         val input = EditText(this).apply {
             hint = getString(R.string.add_stickies_dialog_placeholder)
             inputType = InputType.TYPE_CLASS_TEXT
@@ -87,9 +111,29 @@ class MainActivity : AppCompatActivity() {
             .setMessage(R.string.add_stickies_dialog_message)
             .setView(input)
             .setPositiveButton(R.string.add) { _, _ ->
-                input.text.toString().toFloatOrNull()?.let { stickyViewModel.addSticky(it) }
+                input.text.toString().toFloatOrNull()?.let { stickyViewModel.addSticky(it, defaultTag) }
             }
             .setNegativeButton(R.string.cancel) { dialog, _ ->
+                dialog.cancel()
+            }
+            .create()
+            .show()
+    }
+
+    private fun filterStickyDialog() {
+        val selectedTags = stickyViewModel.getTags()
+        val checked = Tag.values().map { selectedTags.contains(it) }
+
+        val tagLabels = Tag.values().map { getString(it.label) }
+
+        val listener = DialogInterface.OnMultiChoiceClickListener { _, which, isChecked ->
+            stickyViewModel.updateTag(Tag[which], isChecked)
+        }
+
+        AlertDialog.Builder(this)
+            .setTitle(R.string.filter_stickies_dialog_title)
+            .setMultiChoiceItems(tagLabels.toTypedArray(), checked.toBooleanArray(), listener)
+            .setNeutralButton(R.string.confirm) { dialog, _ ->
                 dialog.cancel()
             }
             .create()

@@ -12,6 +12,7 @@ data class Sticky(
     val id: Int = 0,
     val amount: Float,
     val timeMillis: Long,
+    val tag: Tag,
 )
 
 @BindingAdapter("android:time")

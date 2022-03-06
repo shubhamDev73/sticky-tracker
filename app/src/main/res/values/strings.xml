@@ -4,6 +4,7 @@
     <string name="sticky_count">%s\'s stickies: %.2f</string>
     <string name="today">Today</string>
     <string name="add_sticky">Add sticky</string>
+    <string name="filter_sticky">Filter stickies</string>
     <string-array name="times">
         <item>12:00 AM</item>
         <item>03:00 AM</item>
@@ -20,4 +21,8 @@
     <string name="add_stickies_dialog_placeholder">Enter stickies</string>
     <string name="add">Add</string>
     <string name="cancel">Cancel</string>
+    <string name="confirm">Confirm</string>
+    <string name="filter_stickies_dialog_title">Filter stickies</string>
+    <string name="cigarette">Cigarette</string>
+    <string name="joint">Joint</string>
 </resources>

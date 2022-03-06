@@ -1,19 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <group android:id="@+id/addStickyGroup">
-        <item
-            android:id="@+id/add"
-            android:contentDescription="@string/add_sticky"
-            android:icon="@android:drawable/ic_menu_add"
-            android:title="@string/add_sticky"
-            app:showAsAction="always" />
-
-        <item
-            android:id="@+id/addMultiple"
-            android:contentDescription="@string/add_sticky"
-            android:title="@string/add_sticky"
-            app:showAsAction="collapseActionView" />
-    </group>
+    <item
+        android:id="@+id/filter"
+        android:contentDescription="@string/filter_sticky"
+        android:icon="@drawable/ic_filter"
+        android:title="@string/filter_sticky"
+        app:showAsAction="ifRoom" />
 </menu>

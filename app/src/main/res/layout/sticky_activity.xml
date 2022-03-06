@@ -30,5 +30,14 @@
             app:defaultNavHost="true"
             app:navGraph="@navigation/sticky_nav"
             tools:layout="@layout/day_list_fragment" />
+
+        <LinearLayout
+            android:id="@+id/addOptions"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp"
+            android:gravity="bottom|end"
+            android:orientation="vertical" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>
