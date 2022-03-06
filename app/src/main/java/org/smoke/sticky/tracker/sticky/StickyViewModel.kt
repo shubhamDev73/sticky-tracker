@@ -9,6 +9,7 @@ import org.smoke.sticky.tracker.model.Day
 import org.smoke.sticky.tracker.model.Sticky
 import org.smoke.sticky.tracker.model.StickyDao
 import org.smoke.sticky.tracker.model.Tag
+import org.smoke.sticky.tracker.utils.PreferenceUtils
 
 class StickyViewModel(private val stickyDao: StickyDao): ViewModel() {
 
@@ -18,8 +19,12 @@ class StickyViewModel(private val stickyDao: StickyDao): ViewModel() {
     private val _stickies = MutableLiveData<List<Sticky>>()
     val stickies: LiveData<List<Sticky>> = _stickies
 
-    private val _tags = MutableLiveData<List<Tag>>(listOf(Tag.CIGARETTE))
+    private val _tags = MutableLiveData<List<Tag>>()
     val tags: LiveData<List<Tag>> = _tags
+
+    init {
+        _tags.value = PreferenceUtils.getTags()
+    }
 
     fun updateDay(day: Day) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -36,6 +41,7 @@ class StickyViewModel(private val stickyDao: StickyDao): ViewModel() {
         } else {
             removeTag(tag)
         }
+        PreferenceUtils.setTags(getTags())
         filterStickies()
     }
 

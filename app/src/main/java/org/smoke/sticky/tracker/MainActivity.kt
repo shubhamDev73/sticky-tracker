@@ -1,5 +1,6 @@
 package org.smoke.sticky.tracker
 
+import android.content.Context
 import android.content.DialogInterface
 import android.content.res.ColorStateList
 import android.graphics.drawable.Drawable
@@ -20,6 +21,7 @@ import org.smoke.sticky.tracker.model.Tag
 import org.smoke.sticky.tracker.sticky.StickyListFragmentDirections
 import org.smoke.sticky.tracker.sticky.StickyViewModel
 import org.smoke.sticky.tracker.sticky.StickyViewModelFactory
+import org.smoke.sticky.tracker.utils.PreferenceUtils
 
 class MainActivity : AppCompatActivity() {
 
@@ -31,6 +33,7 @@ class MainActivity : AppCompatActivity() {
     private val dayViewModel: DayViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        PreferenceUtils.init(this.getPreferences(Context.MODE_PRIVATE))
         super.onCreate(savedInstanceState)
         binding = StickyActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
