@@ -41,7 +41,7 @@ class TimelineZoomView(
                 stickies.observe(it) { stickies ->
                     if (!adjustedTop) {
                         if (day.today) {
-                            zoomViewModel.scale = 5f
+                            zoomViewModel.scale = 4f
                             zoomViewModel.position = 100f - timelineView.getPosition(TimeUtils.getCurrentTime())
                             clamp()
                             invalidate()
@@ -59,12 +59,15 @@ class TimelineZoomView(
         timelineView.refresh()
         stickyBindings.forEach {
             it.binding.root.y = getPosition(it.sticky)
+            it.binding.options.isVisible = zoomViewModel.scale >= 3f
         }
         invalidate()
     }
 
     private fun refresh(stickies: List<Sticky>) {
         timelineView.refresh(stickies)
+
+        // add missing stickies
         stickies.filter { sticky ->
             stickyBindings.find {
                 it.sticky == sticky
@@ -72,24 +75,26 @@ class TimelineZoomView(
         }.forEach { sticky ->
             createStickyDetail(sticky)
         }
+
+        // remove extra stickies
         val removeStickies = stickyBindings.filter { !stickies.contains(it.sticky) }
         removeStickies.forEach {
             removeView(it.binding.root)
         }
         stickyBindings.removeIf { !stickies.contains(it.sticky) }
+
         invalidate()
     }
 
     private fun createStickyDetail(sticky: Sticky) {
         val binding = StickyDetailsElementBinding.inflate(LayoutInflater.from(context), this, false)
         binding.sticky = sticky
-        binding.deleteButton.isVisible = day.today
         binding.deleteButton.setOnClickListener {
             onDelete(sticky)
         }
         stickyBindings.add(StickyBinding(sticky, binding))
         addView(binding.root)
-        binding.root.x = resources.displayMetrics.widthPixels / 2f + 20f
+        binding.root.x = resources.displayMetrics.widthPixels / 2f + 24f
         binding.root.y = getPosition(sticky)
     }
 
@@ -131,7 +136,7 @@ class TimelineZoomView(
     }
 
     private fun getPosition(sticky: Sticky): Float {
-        return timelineView.getPosition(sticky) * zoomViewModel.scale - 24f
+        return timelineView.getPosition(sticky) * zoomViewModel.scale - 48f
     }
 
     private data class StickyBinding(val sticky: Sticky, val binding: StickyDetailsElementBinding)

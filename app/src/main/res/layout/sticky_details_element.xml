@@ -12,15 +12,17 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="38dp">
 
         <TextView
             android:id="@+id/stickyTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:time="@{sticky.timeMillis}"
+            android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             tools:text="03:00 AM" />
 
         <TextView
@@ -28,18 +30,37 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{String.valueOf(sticky.amount)}"
+            android:visibility="@{sticky.amount == 1f ? View.GONE : View.VISIBLE}"
+            android:textSize="20sp"
             android:layout_marginStart="10dp"
             app:layout_constraintStart_toEndOf="@id/stickyTime"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="1" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:text="1.0" />
 
-        <ImageButton
-            android:id="@+id/deleteButton"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginStart="10dp"
+        <LinearLayout
+            android:id="@+id/options"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="end"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/stickyAmount"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@android:drawable/ic_menu_delete" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageButton
+                android:id="@+id/editButton"
+                android:layout_width="30dp"
+                android:layout_height="38dp"
+                android:backgroundTint="#111111"
+                app:srcCompat="@android:drawable/ic_menu_edit" />
+
+            <ImageButton
+                android:id="@+id/deleteButton"
+                android:layout_width="24dp"
+                android:layout_height="38dp"
+                android:backgroundTint="#111111"
+                app:srcCompat="@android:drawable/ic_menu_delete" />
+        </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
