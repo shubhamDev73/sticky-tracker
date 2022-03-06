@@ -147,8 +147,13 @@ class MainActivity : AppCompatActivity() {
         if (dayViewModel.currentDay.value == null) {
             finish()
         } else {
-            val action = StickyListFragmentDirections.actionStickyListFragmentToDayListFragment()
-            findNavController(binding.navHostFragment.id).navigate(action)
+            val navController = findNavController(binding.navHostFragment.id)
+            if (navController.previousBackStackEntry == null) {
+                val action = StickyListFragmentDirections.actionStickyListFragmentToDayListFragment()
+                navController.navigate(action)
+            } else {
+                navController.popBackStack()
+            }
             dayViewModel.setCurrentDay(null)
         }
     }

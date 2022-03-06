@@ -83,7 +83,7 @@ class TimelineZoomView(
         }
         stickyBindings.removeIf { !stickies.contains(it.sticky) }
 
-        invalidate()
+        refresh()
     }
 
     private fun createStickyDetail(sticky: Sticky) {
