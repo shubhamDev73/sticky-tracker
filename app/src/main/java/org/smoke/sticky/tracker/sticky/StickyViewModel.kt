@@ -105,6 +105,12 @@ class StickyViewModel(private val stickyDao: StickyDao): ViewModel() {
         }
     }
 
+    fun edit(sticky: Sticky) {
+        viewModelScope.launch(Dispatchers.IO) {
+            stickyDao.update(sticky)
+        }
+    }
+
 }
 
 class StickyViewModelFactory(private val stickyDao: StickyDao) : ViewModelProvider.Factory {

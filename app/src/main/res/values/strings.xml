@@ -17,6 +17,7 @@
         <item>12:00 AM</item>
     </string-array>
     <string name="add_stickies">Add stickies</string>
+    <string name="edit_stickies">Edit stickies</string>
     <string name="sticky_dialog_amount_placeholder">Enter amount</string>
     <string name="add">Add</string>
     <string name="cancel">Cancel</string>

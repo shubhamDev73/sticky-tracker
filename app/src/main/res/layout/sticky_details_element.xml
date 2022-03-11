@@ -7,6 +7,9 @@
         <variable
             name="sticky"
             type="org.smoke.sticky.tracker.model.Sticky" />
+        <variable
+            name="stickyOptionsListener"
+            type="org.smoke.sticky.tracker.sticky.StickyOptionsListener" />
         <import type="android.view.View" />
     </data>
 
@@ -53,14 +56,16 @@
                 android:layout_width="30dp"
                 android:layout_height="38dp"
                 android:backgroundTint="#111111"
-                app:srcCompat="@android:drawable/ic_menu_edit" />
+                app:srcCompat="@android:drawable/ic_menu_edit"
+                android:onClick="@{() -> stickyOptionsListener.onEdit(sticky)}" />
 
             <ImageButton
                 android:id="@+id/deleteButton"
                 android:layout_width="24dp"
                 android:layout_height="38dp"
                 android:backgroundTint="#111111"
-                app:srcCompat="@android:drawable/ic_menu_delete" />
+                app:srcCompat="@android:drawable/ic_menu_delete"
+                android:onClick="@{() -> stickyOptionsListener.onDelete(sticky)}" />
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

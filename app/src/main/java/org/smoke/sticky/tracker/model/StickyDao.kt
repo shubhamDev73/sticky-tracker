@@ -1,15 +1,15 @@
 package org.smoke.sticky.tracker.model
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface StickyDao {
     @Insert
     suspend fun insert(sticky: Sticky)
+
+    @Update
+    suspend fun update(sticky: Sticky)
 
     @Delete
     suspend fun delete(sticky: Sticky)

@@ -10,9 +10,9 @@ import org.smoke.sticky.tracker.utils.TimeUtils
 data class Sticky(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
-    val amount: Float,
+    var amount: Float,
     val timeMillis: Long,
-    val tag: Tag,
+    var tag: Tag,
 )
 
 @BindingAdapter("android:time")

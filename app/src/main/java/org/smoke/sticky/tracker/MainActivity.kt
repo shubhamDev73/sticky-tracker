@@ -96,7 +96,7 @@ class MainActivity : AppCompatActivity() {
                 stickyViewModel.addSticky(tag)
             }
             fab .floatingActionButton.setOnLongClickListener {
-                StickyDialogFragment { amount, tag ->
+                StickyDialogFragment(R.string.add_stickies, tag) { amount, tag ->
                     stickyViewModel.addSticky(amount, tag)
                 }.show(supportFragmentManager, "addSticky")
                 true

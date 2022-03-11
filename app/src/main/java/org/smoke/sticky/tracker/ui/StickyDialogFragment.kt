@@ -11,7 +11,12 @@ import org.smoke.sticky.tracker.R
 import org.smoke.sticky.tracker.databinding.StickyDialogBinding
 import org.smoke.sticky.tracker.model.Tag
 
-class StickyDialogFragment(private val onPositiveClick: (Float, Tag) -> Unit): DialogFragment() {
+class StickyDialogFragment(
+    private val titleResourceId: Int,
+    private val defaultTag: Tag = Tag.CIGARETTE,
+    private val defaultAmount: Float? = null,
+    private val onPositiveClick: (Float, Tag) -> Unit
+): DialogFragment() {
 
     private lateinit var binding: StickyDialogBinding
     private lateinit var tag: Tag
@@ -22,6 +27,10 @@ class StickyDialogFragment(private val onPositiveClick: (Float, Tag) -> Unit): D
             val spinner = binding.spinner
             val adapter = ArrayAdapter(it, R.layout.support_simple_spinner_dropdown_item, Tag.values().map { getString(it.label) })
             spinner.adapter = adapter
+            spinner.setSelection(defaultTag.ordinal)
+            defaultAmount?.let {
+                binding.stickyAmount.setText(it.toString())
+            }
             spinner.onItemSelectedListener = object: AdapterView.OnItemClickListener,
                 AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
@@ -34,7 +43,7 @@ class StickyDialogFragment(private val onPositiveClick: (Float, Tag) -> Unit): D
             }
 
             return AlertDialog.Builder(it)
-                .setTitle(R.string.add_stickies)
+                .setTitle(titleResourceId)
                 .setView(binding.root)
                 .setPositiveButton(R.string.add) { _, _ ->
                     binding.stickyAmount.text.toString().toFloatOrNull()?.let { onPositiveClick(it, tag) }

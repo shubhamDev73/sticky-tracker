@@ -7,12 +7,15 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.navArgs
+import org.smoke.sticky.tracker.R
 import org.smoke.sticky.tracker.StickyApplication
 import org.smoke.sticky.tracker.databinding.LayoutFragmentBinding
+import org.smoke.sticky.tracker.model.Sticky
+import org.smoke.sticky.tracker.ui.StickyDialogFragment
 import org.smoke.sticky.tracker.ui.TimelineZoomView
 import org.smoke.sticky.tracker.utils.TimeUtils
 
-class StickyListFragment: Fragment() {
+class StickyListFragment: Fragment(), StickyOptionsListener {
 
     private lateinit var binding: LayoutFragmentBinding
     private val stickyViewModel: StickyViewModel by activityViewModels {
@@ -26,9 +29,7 @@ class StickyListFragment: Fragment() {
         val day = args.day ?: TimeUtils.getToday()
         stickyViewModel.updateDay(day)
 
-        val timeline = TimelineZoomView(requireContext(), day) {
-            stickyViewModel.delete(it)
-        }
+        val timeline = TimelineZoomView(requireContext(), day, this)
         binding.constraintLayout.addView(timeline)
 
         stickyViewModel.stickies.observe(viewLifecycleOwner) {
@@ -36,6 +37,20 @@ class StickyListFragment: Fragment() {
         }
 
         return binding.root
+    }
+
+    override fun onDelete(sticky: Sticky) {
+        stickyViewModel.delete(sticky)
+    }
+
+    override fun onEdit(sticky: Sticky) {
+        activity?.supportFragmentManager?.let {
+            StickyDialogFragment(R.string.edit_stickies, sticky.tag, sticky.amount) { amount, tag ->
+                sticky.amount = amount
+                sticky.tag = tag
+                stickyViewModel.edit(sticky)
+            }.show(it, "editSticky")
+        }
     }
 
 }
