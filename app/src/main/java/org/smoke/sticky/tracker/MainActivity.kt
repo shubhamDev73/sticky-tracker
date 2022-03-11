@@ -6,8 +6,6 @@ import android.content.res.ColorStateList
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.Icon
 import android.os.Bundle
-import android.text.InputType
-import android.widget.EditText
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -21,6 +19,7 @@ import org.smoke.sticky.tracker.model.Tag
 import org.smoke.sticky.tracker.sticky.StickyListFragmentDirections
 import org.smoke.sticky.tracker.sticky.StickyViewModel
 import org.smoke.sticky.tracker.sticky.StickyViewModelFactory
+import org.smoke.sticky.tracker.ui.StickyDialogFragment
 import org.smoke.sticky.tracker.utils.PreferenceUtils
 
 class MainActivity : AppCompatActivity() {
@@ -97,30 +96,12 @@ class MainActivity : AppCompatActivity() {
                 stickyViewModel.addSticky(tag)
             }
             fab .floatingActionButton.setOnLongClickListener {
-                addStickyDialog(tag)
+                StickyDialogFragment { amount, tag ->
+                    stickyViewModel.addSticky(amount, tag)
+                }.show(supportFragmentManager, "addSticky")
                 true
             }
         }
-    }
-
-    private fun addStickyDialog(defaultTag: Tag) {
-        val input = EditText(this).apply {
-            hint = getString(R.string.add_stickies_dialog_placeholder)
-            inputType = InputType.TYPE_CLASS_TEXT
-        }
-
-        AlertDialog.Builder(this)
-            .setTitle(R.string.add_stickies_dialog_title)
-            .setMessage(R.string.add_stickies_dialog_message)
-            .setView(input)
-            .setPositiveButton(R.string.add) { _, _ ->
-                input.text.toString().toFloatOrNull()?.let { stickyViewModel.addSticky(it, defaultTag) }
-            }
-            .setNegativeButton(R.string.cancel) { dialog, _ ->
-                dialog.cancel()
-            }
-            .create()
-            .show()
     }
 
     private fun filterStickyDialog() {
