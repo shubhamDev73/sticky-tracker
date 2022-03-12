@@ -19,7 +19,7 @@ import org.smoke.sticky.tracker.model.Tag
 import org.smoke.sticky.tracker.sticky.StickyListFragmentDirections
 import org.smoke.sticky.tracker.sticky.StickyViewModel
 import org.smoke.sticky.tracker.sticky.StickyViewModelFactory
-import org.smoke.sticky.tracker.ui.StickyDialogFragment
+import org.smoke.sticky.tracker.ui.dialogs.StickyDialogFragment
 import org.smoke.sticky.tracker.utils.PreferenceUtils
 
 class MainActivity : AppCompatActivity() {
@@ -96,8 +96,8 @@ class MainActivity : AppCompatActivity() {
                 stickyViewModel.addSticky(tag)
             }
             fab .floatingActionButton.setOnLongClickListener {
-                StickyDialogFragment(R.string.add_stickies, tag) { amount, tag ->
-                    stickyViewModel.addSticky(amount, tag)
+                StickyDialogFragment(R.string.add_stickies, R.string.add, tag) { amount, tag, timeMillis ->
+                    stickyViewModel.addSticky(amount, tag, timeMillis)
                 }.show(supportFragmentManager, "addSticky")
                 true
             }

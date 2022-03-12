@@ -11,7 +11,7 @@ data class Sticky(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     var amount: Float,
-    val timeMillis: Long,
+    var timeMillis: Long,
     var tag: Tag,
 )
 

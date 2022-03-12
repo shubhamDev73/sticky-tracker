@@ -11,7 +11,7 @@ import org.smoke.sticky.tracker.R
 import org.smoke.sticky.tracker.StickyApplication
 import org.smoke.sticky.tracker.databinding.LayoutFragmentBinding
 import org.smoke.sticky.tracker.model.Sticky
-import org.smoke.sticky.tracker.ui.StickyDialogFragment
+import org.smoke.sticky.tracker.ui.dialogs.StickyDialogFragment
 import org.smoke.sticky.tracker.ui.TimelineZoomView
 import org.smoke.sticky.tracker.utils.TimeUtils
 
@@ -45,9 +45,10 @@ class StickyListFragment: Fragment(), StickyOptionsListener {
 
     override fun onEdit(sticky: Sticky) {
         activity?.supportFragmentManager?.let {
-            StickyDialogFragment(R.string.edit_stickies, sticky.tag, sticky.amount) { amount, tag ->
+            StickyDialogFragment(R.string.edit_stickies, R.string.edit, sticky.tag, sticky.amount, sticky.timeMillis) { amount, tag, timeMillis ->
                 sticky.amount = amount
                 sticky.tag = tag
+                sticky.timeMillis = timeMillis
                 stickyViewModel.edit(sticky)
             }.show(it, "editSticky")
         }

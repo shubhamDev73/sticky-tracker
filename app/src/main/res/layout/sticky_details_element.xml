@@ -55,7 +55,7 @@
                 android:id="@+id/editButton"
                 android:layout_width="30dp"
                 android:layout_height="38dp"
-                android:backgroundTint="#111111"
+                android:background="@android:color/transparent"
                 app:srcCompat="@android:drawable/ic_menu_edit"
                 android:onClick="@{() -> stickyOptionsListener.onEdit(sticky)}" />
 
@@ -63,7 +63,7 @@
                 android:id="@+id/deleteButton"
                 android:layout_width="24dp"
                 android:layout_height="38dp"
-                android:backgroundTint="#111111"
+                android:background="@android:color/transparent"
                 app:srcCompat="@android:drawable/ic_menu_delete"
                 android:onClick="@{() -> stickyOptionsListener.onDelete(sticky)}" />
         </LinearLayout>

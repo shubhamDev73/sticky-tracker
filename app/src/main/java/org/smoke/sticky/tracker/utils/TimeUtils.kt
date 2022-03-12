@@ -41,5 +41,6 @@ class TimeUtils {
         }
 
         fun getTimeString(timeMillis: Long): String =  SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT, Locale.getDefault()).format(timeMillis).uppercase()
+        fun getDateTimeString(timeMillis: Long): String =  SimpleDateFormat.getDateTimeInstance(SimpleDateFormat.SHORT, SimpleDateFormat.SHORT).format(timeMillis).uppercase()
     }
 }

@@ -89,12 +89,12 @@ class StickyViewModel(private val stickyDao: StickyDao): ViewModel() {
     }
 
     fun addSticky(tag: Tag) {
-        addSticky(1f, tag)
+        addSticky(1f, tag, System.currentTimeMillis())
     }
 
-    fun addSticky(amount: Float, tag: Tag) {
+    fun addSticky(amount: Float, tag: Tag, timeMillis: Long) {
         viewModelScope.launch(Dispatchers.IO) {
-            val sticky = Sticky(amount = amount, timeMillis = System.currentTimeMillis(), tag = tag)
+            val sticky = Sticky(amount = amount, timeMillis = timeMillis, tag = tag)
             stickyDao.insert(sticky)
         }
     }

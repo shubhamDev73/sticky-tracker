@@ -62,6 +62,7 @@ class TimelineZoomView(
     private fun refresh() {
         timelineView.refresh()
         stickyBindings.forEach {
+            it.binding.sticky = it.sticky
             it.binding.root.y = getPosition(it.sticky)
             it.binding.options.isVisible = zoomViewModel.scale >= 3f
         }
