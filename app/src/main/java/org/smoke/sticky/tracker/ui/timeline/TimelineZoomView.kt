@@ -1,4 +1,4 @@
-package org.smoke.sticky.tracker.ui
+package org.smoke.sticky.tracker.ui.timeline
 
 import android.content.Context
 import android.view.GestureDetector
@@ -22,8 +22,8 @@ class TimelineZoomView(
     private val stickyOptionsListener: StickyOptionsListener,
 ): RelativeLayout(context) {
 
-    private val zoomViewModel = ZoomViewModel()
-    private val timelineView = TimelineView(context, day, zoomViewModel)
+    private val timelineViewModel = TimelineViewModel()
+    private val timelineView = TimelineView(context, timelineViewModel)
     private val panDetector = GestureDetector(context, PanListener())
     private val scaleDetector = ScaleGestureDetector(context, ScaleListener())
     private val params = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
@@ -36,17 +36,17 @@ class TimelineZoomView(
         layoutParams = params
         doOnAttach {
             findViewTreeLifecycleOwner()?.let {
-                zoomViewModel.scaleData.observe(it) {
+                timelineViewModel.scaleData.observe(it) {
                     refresh()
                 }
-                zoomViewModel.positionData.observe(it) {
+                timelineViewModel.positionData.observe(it) {
                     refresh()
                 }
                 stickies.observe(it) { stickies ->
                     if (!adjustedTop) {
                         if (day.today) {
-                            zoomViewModel.scale = 4f
-                            zoomViewModel.position = 100f - timelineView.getPosition(TimeUtils.getCurrentTime())
+                            timelineViewModel.scale = 4f
+                            timelineViewModel.position = 100f - timelineViewModel.getPosition(TimeUtils.getCurrentTime())
                             clamp()
                             invalidate()
                             adjustedTop = true
@@ -56,6 +56,8 @@ class TimelineZoomView(
                 }
             }
             addView(timelineView)
+            timelineViewModel.height = timelineView.height.toFloat()
+            timelineViewModel.startTime = day.startTime
         }
     }
 
@@ -64,14 +66,12 @@ class TimelineZoomView(
         stickyBindings.forEach {
             it.binding.sticky = it.sticky
             it.binding.root.y = getPosition(it.sticky)
-            it.binding.options.isVisible = zoomViewModel.scale >= 3f
+            it.binding.options.isVisible = timelineViewModel.scale >= 3f
         }
         invalidate()
     }
 
     private fun refresh(stickies: List<Sticky>) {
-        timelineView.refresh(stickies)
-
         // add missing stickies
         stickies.filter { sticky ->
             stickyBindings.find {
@@ -97,7 +97,7 @@ class TimelineZoomView(
         binding.stickyOptionsListener = stickyOptionsListener
         stickyBindings.add(StickyBinding(sticky, binding))
         addView(binding.root)
-        binding.root.x = resources.displayMetrics.widthPixels / 2f + 24f
+        binding.root.x = resources.displayMetrics.widthPixels / 2f - 20f
         binding.root.y = getPosition(sticky)
     }
 
@@ -111,7 +111,7 @@ class TimelineZoomView(
 
     private inner class PanListener: GestureDetector.SimpleOnGestureListener() {
         override fun onScroll(e1: MotionEvent?, e2: MotionEvent?, distanceX: Float, distanceY: Float): Boolean {
-            zoomViewModel.position -= distanceY / zoomViewModel.scale
+            timelineViewModel.position -= distanceY / timelineViewModel.scale
             clamp()
             invalidate()
             return true
@@ -120,7 +120,7 @@ class TimelineZoomView(
 
     private inner class ScaleListener : ScaleGestureDetector.SimpleOnScaleGestureListener() {
         override fun onScale(detector: ScaleGestureDetector): Boolean {
-            zoomViewModel.scale *= detector.scaleFactor
+            timelineViewModel.scale *= detector.scaleFactor
             clamp()
             invalidate()
             return true
@@ -128,18 +128,18 @@ class TimelineZoomView(
     }
 
     private fun clamp() {
-        zoomViewModel.scale = zoomViewModel.scale.coerceAtLeast(1f).coerceAtMost(10f)
+        timelineViewModel.scale = timelineViewModel.scale.coerceAtLeast(1f).coerceAtMost(10f)
 
-        val limit = (height / zoomViewModel.scale - height)
-        zoomViewModel.position = if (zoomViewModel.scale < 1) {
-            zoomViewModel.position.coerceAtLeast(0f).coerceAtMost(limit)
+        val limit = (height / timelineViewModel.scale - height)
+        timelineViewModel.position = if (timelineViewModel.scale < 1) {
+            timelineViewModel.position.coerceAtLeast(0f).coerceAtMost(limit)
         } else {
-            zoomViewModel.position.coerceAtLeast(limit).coerceAtMost(0f)
+            timelineViewModel.position.coerceAtLeast(limit).coerceAtMost(0f)
         }
     }
 
     private fun getPosition(sticky: Sticky): Float {
-        return timelineView.getPosition(sticky) * zoomViewModel.scale - 48f
+        return timelineViewModel.getPosition(sticky) * timelineViewModel.scale - 56f
     }
 
     private data class StickyBinding(val sticky: Sticky, val binding: StickyDetailsElementBinding)

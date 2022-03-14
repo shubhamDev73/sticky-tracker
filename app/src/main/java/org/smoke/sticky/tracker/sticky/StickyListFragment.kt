@@ -12,7 +12,7 @@ import org.smoke.sticky.tracker.StickyApplication
 import org.smoke.sticky.tracker.databinding.LayoutFragmentBinding
 import org.smoke.sticky.tracker.model.Sticky
 import org.smoke.sticky.tracker.ui.dialogs.StickyDialogFragment
-import org.smoke.sticky.tracker.ui.TimelineZoomView
+import org.smoke.sticky.tracker.ui.timeline.TimelineZoomView
 import org.smoke.sticky.tracker.utils.TimeUtils
 
 class StickyListFragment: Fragment(), StickyOptionsListener {

@@ -17,7 +17,7 @@ class PreferenceUtils {
         fun getTags(): List<Tag> {
             val names = preferences.getStringSet(KEY_TAGS, setOf())
             val tags = names?.map { Tag.valueOf(it) }
-            return tags ?: listOf()
+            return tags ?: Tag.values().toList()
         }
 
         fun setTags(tags: List<Tag>) {

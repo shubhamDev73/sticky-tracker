@@ -11,11 +11,22 @@
             name="stickyOptionsListener"
             type="org.smoke.sticky.tracker.sticky.StickyOptionsListener" />
         <import type="android.view.View" />
+        <import type="androidx.core.content.ContextCompat" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="38dp">
+
+        <ImageView
+            android:id="@+id/timelineMark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@android:drawable/presence_online"
+            android:tint="@{ContextCompat.getColor(context, sticky.tag.color)}" />
 
         <TextView
             android:id="@+id/stickyTime"
@@ -23,7 +34,8 @@
             android:layout_height="wrap_content"
             android:time="@{sticky.timeMillis}"
             android:textSize="20sp"
-            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="8dp"
+            app:layout_constraintStart_toEndOf="@id/timelineMark"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             tools:text="03:00 AM" />
