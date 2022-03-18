@@ -10,13 +10,10 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.navigation.findNavController
 import org.smoke.sticky.tracker.databinding.FloatingActionButtonBinding
 import org.smoke.sticky.tracker.databinding.StickyActivityBinding
-import org.smoke.sticky.tracker.day.DayViewModel
 import org.smoke.sticky.tracker.model.Day
 import org.smoke.sticky.tracker.model.Tag
-import org.smoke.sticky.tracker.sticky.StickyListFragmentDirections
 import org.smoke.sticky.tracker.sticky.StickyViewModel
 import org.smoke.sticky.tracker.sticky.StickyViewModelFactory
 import org.smoke.sticky.tracker.ui.dialogs.StickyDialogFragment
@@ -29,7 +26,6 @@ class MainActivity : AppCompatActivity() {
     private val stickyViewModel: StickyViewModel by viewModels {
         StickyViewModelFactory((application as StickyApplication).database.stickyDao())
     }
-    private val dayViewModel: DayViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         PreferenceUtils.init(this.getPreferences(Context.MODE_PRIVATE))
@@ -55,7 +51,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun observeLabel() {
-        dayViewModel.currentDay.observe(this) { day ->
+        stickyViewModel.day.observe(this) { day ->
             assignLabel(day, 0f)
             stickyViewModel.tags.removeObservers(this)
             day?.let {
@@ -78,7 +74,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun observeTopBar() {
-        dayViewModel.currentDay.observe(this) { day ->
+        stickyViewModel.day.observe(this) { day ->
             binding.topBar.navigationIcon = if (day == null) null else navigationIcon
             binding.addOptions.isVisible = day != null
         }
@@ -122,21 +118,6 @@ class MainActivity : AppCompatActivity() {
             }
             .create()
             .show()
-    }
-
-    override fun onBackPressed() {
-        if (dayViewModel.currentDay.value == null) {
-            finish()
-        } else {
-            val navController = findNavController(binding.navHostFragment.id)
-            if (navController.previousBackStackEntry == null) {
-                val action = StickyListFragmentDirections.actionStickyListFragmentToDayListFragment()
-                navController.navigate(action)
-            } else {
-                navController.popBackStack()
-            }
-            dayViewModel.setCurrentDay(null)
-        }
     }
 
 }

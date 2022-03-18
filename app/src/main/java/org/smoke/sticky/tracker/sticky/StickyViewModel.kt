@@ -13,6 +13,9 @@ import org.smoke.sticky.tracker.utils.PreferenceUtils
 
 class StickyViewModel(private val stickyDao: StickyDao): ViewModel() {
 
+    private val _day = MutableLiveData<Day>()
+    val day: LiveData<Day> = _day
+
     private val _allStickies = MutableLiveData<List<Sticky>>()
 
     // filtered stickies
@@ -22,16 +25,40 @@ class StickyViewModel(private val stickyDao: StickyDao): ViewModel() {
     private val _tags = MutableLiveData<List<Tag>>()
     val tags: LiveData<List<Tag>> = _tags
 
+    val week = TimeUtils.generateWeek()
+    private var dayIndex = -1
+
     init {
         _tags.value = PreferenceUtils.getTags()
+        updateDay(TimeUtils.getToday())
     }
 
     fun updateDay(day: Day) {
+        _day.value = day
+        dayIndex = week.indexOfFirst { it.startTime == day.startTime }
         viewModelScope.launch(Dispatchers.IO) {
-            stickyDao.getRecentItems(day.startTime, day.startTime + TimeUtils.millisInDay).collect {
+            stickyDao.getRecentItems(day.startTime - TimeUtils.millisInDay, day.startTime + 2 * TimeUtils.millisInDay).collect {
                 _allStickies.postValue(it)
                 filterStickies(it)
             }
+        }
+    }
+
+    fun nextDay(): Boolean {
+        return if(dayIndex < week.size - 1) {
+            updateDay(week[dayIndex + 1])
+            true
+        } else {
+            false
+        }
+    }
+
+    fun previousDay(): Boolean {
+        return if(dayIndex > 0) {
+            updateDay(week[dayIndex - 1])
+            true
+        } else {
+            false
         }
     }
 
@@ -99,13 +126,13 @@ class StickyViewModel(private val stickyDao: StickyDao): ViewModel() {
         }
     }
 
-    fun delete(sticky: Sticky) {
+    fun deleteSticky(sticky: Sticky) {
         viewModelScope.launch(Dispatchers.IO) {
             stickyDao.delete(sticky)
         }
     }
 
-    fun edit(sticky: Sticky) {
+    fun editSticky(sticky: Sticky) {
         viewModelScope.launch(Dispatchers.IO) {
             stickyDao.update(sticky)
         }

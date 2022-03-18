@@ -11,7 +11,7 @@ import org.smoke.sticky.tracker.model.Day
 class DayListAdapter(
     private val days: List<Day>,
     private val stickyViewModel: StickyViewModel,
-    private val onCLickListener: (Day) -> Unit
+    private val onClickListener: (Day) -> Unit
 ): RecyclerView.Adapter<DayListAdapter.ViewHolder>() {
 
     class ViewHolder(val binding: DayListElementBinding): RecyclerView.ViewHolder(binding.root)
@@ -32,7 +32,7 @@ class DayListAdapter(
                 }
             }
         }
-        holder.binding.button.setOnClickListener{ onCLickListener(day) }
+        holder.binding.button.setOnClickListener{ onClickListener(day) }
     }
 
     override fun getItemCount(): Int {

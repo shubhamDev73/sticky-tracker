@@ -6,16 +6,14 @@ import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import android.widget.RelativeLayout
 import androidx.core.view.doOnAttach
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import org.smoke.sticky.tracker.model.Day
 import org.smoke.sticky.tracker.model.Sticky
 import org.smoke.sticky.tracker.sticky.StickyOptionsListener
-import org.smoke.sticky.tracker.utils.TimeUtils
 
 class TimelineZoomView(
     context: Context,
-    private val day: Day,
+    private val scrollEndListener: ScrollEndListener,
     stickyOptionsListener: StickyOptionsListener,
 ): RelativeLayout(context) {
 
@@ -25,9 +23,6 @@ class TimelineZoomView(
     private val panDetector = GestureDetector(context, PanListener())
     private val scaleDetector = ScaleGestureDetector(context, ScaleListener())
     private val params = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
-
-    val stickies = MutableLiveData<List<Sticky>>()
-    private var adjustedTop = false
 
     init {
         layoutParams = params
@@ -39,25 +34,19 @@ class TimelineZoomView(
                 timelineViewModel.positionData.observe(it) {
                     refresh()
                 }
-                stickies.observe(it) { stickies ->
-                    if (!adjustedTop) {
-                        if (day.today) {
-                            timelineViewModel.scale = 4f
-                            timelineViewModel.position = 100f - timelineViewModel.getPosition(TimeUtils.getCurrentTime())
-                            clamp()
-                            invalidate()
-                            adjustedTop = true
-                        }
-                    }
-                    timelineStickyView.refresh(stickies)
-                }
             }
             addView(timelineView)
             timelineStickyView.layoutParams = params
             addView(timelineStickyView)
-            timelineViewModel.height = timelineView.height.toFloat()
-            timelineViewModel.startTime = day.startTime
         }
+    }
+
+    fun updateStickies(stickies: List<Sticky>) {
+        timelineStickyView.refresh(stickies)
+    }
+
+    fun updateDay(day: Day) {
+        timelineViewModel.startTime = day.startTime
     }
 
     private fun refresh() {
@@ -95,11 +84,17 @@ class TimelineZoomView(
     private fun clamp() {
         timelineViewModel.scale = timelineViewModel.scale.coerceAtLeast(1f).coerceAtMost(10f)
 
-        val limit = (timelineViewModel.height / timelineViewModel.scale - timelineViewModel.height)
-        timelineViewModel.position = if (timelineViewModel.scale < 1) {
-            timelineViewModel.position.coerceAtLeast(0f).coerceAtMost(limit)
-        } else {
-            timelineViewModel.position.coerceAtLeast(limit).coerceAtMost(0f)
+        val scaledHeight = timelineViewModel.scaled(timelineViewModel.height)
+        val scaledHalfHeight = timelineViewModel.scaled(timelineViewModel.height / 2)
+        val limit = (scaledHeight - timelineViewModel.height)
+        timelineViewModel.position =
+            timelineViewModel.position.coerceAtLeast(limit - scaledHeight).coerceAtMost(scaledHeight)
+
+        if(timelineViewModel.position < limit - scaledHalfHeight && scrollEndListener.onScrollNext()) {
+            timelineViewModel.position = scaledHalfHeight
+        }
+        if(timelineViewModel.position > scaledHalfHeight && scrollEndListener.onScrollPrevious()) {
+            timelineViewModel.position = limit - scaledHalfHeight
         }
     }
 

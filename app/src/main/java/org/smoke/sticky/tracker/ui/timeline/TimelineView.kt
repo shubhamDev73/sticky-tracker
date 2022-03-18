@@ -39,53 +39,50 @@ class TimelineView(
 
     fun refresh() {
         if(!::mCanvas.isInitialized) return
-        timelineViewModel.height = height.toFloat()
         draw(mCanvas)
     }
 
     override fun onDraw(canvas: Canvas) {
+        timelineViewModel.height = height.toFloat()
         if(!::mCanvas.isInitialized) mCanvas = canvas
 
         super.onDraw(mCanvas)
         mCanvas.save()
         mCanvas.scale(timelineViewModel.scale, timelineViewModel.scale)
 
-        val markMargin = scaled(MARK_WIDTH / 2f)
-        val textMarginTop = scaled(16f)
-        val textMarginRight = scaled(250f)
+        val markMargin = timelineViewModel.scaled(MARK_WIDTH / 2f)
+        val textMarginTop = timelineViewModel.scaled(16f)
+        val textMarginRight = timelineViewModel.scaled(250f)
 
         // line
         paint.color = COLOR
-        paint.strokeWidth = scaled(LINE_STROKE_WIDTH)
-        mCanvas.drawLine(getCentre(), timelineViewModel.position, getCentre(), timelineViewModel.position + height, paint)
+        paint.strokeWidth = timelineViewModel.scaled(LINE_STROKE_WIDTH)
+        mCanvas.drawLine(getCentre(), timelineViewModel.position - height, getCentre(), timelineViewModel.position + 2 * height, paint)
 
         // current mark
         val currentTime = TimeUtils.getCurrentTime()
         val currentMarkY = timelineViewModel.getPosition(currentTime)
-        currentMarkPaint.strokeWidth = scaled(MARK_STROKE_WIDTH)
+        currentMarkPaint.strokeWidth = timelineViewModel.scaled(MARK_STROKE_WIDTH)
         mCanvas.drawLine(getCentre() - markMargin, currentMarkY, getCentre() + markMargin, currentMarkY, currentMarkPaint)
         mCanvas.drawText(TimeUtils.getTimeString(currentTime), getCentre() - textMarginRight, currentMarkY + textMarginTop, textPaint)
 
         // time text
         val times = resources.getStringArray(R.array.times)
-        textPaint.textSize = scaled(TEXT_SIZE)
-        markPaint.strokeWidth = scaled(MARK_STROKE_WIDTH)
+        textPaint.textSize = timelineViewModel.scaled(TEXT_SIZE)
+        markPaint.strokeWidth = timelineViewModel.scaled(MARK_STROKE_WIDTH)
         times.forEachIndexed { index, time ->
-            val y = timelineViewModel.position + height * index / (times.size - 1)
-            mCanvas.drawText(time, getCentre() - textMarginRight, y + textMarginTop, textPaint)
+            for (iter in -1..1) {
+                val y = timelineViewModel.position + height * index / (times.size - 1) +
+                        height * iter
+                mCanvas.drawText(time, getCentre() - textMarginRight, y + textMarginTop, textPaint)
 
-            // mark
-            mCanvas.drawLine(getCentre() - markMargin, y, getCentre() + markMargin, y, markPaint)
+                // mark
+                mCanvas.drawLine(getCentre() - markMargin, y, getCentre() + markMargin, y, markPaint)
+            }
         }
         mCanvas.restore()
     }
 
-    private fun scaled(x: Float): Float {
-        return x / timelineViewModel.scale
-    }
-
-    private fun getCentre(): Float {
-        return scaled(resources.displayMetrics.widthPixels / 2f)
-    }
+    private fun getCentre() = timelineViewModel.scaled(resources.displayMetrics.widthPixels / 2f)
 
 }

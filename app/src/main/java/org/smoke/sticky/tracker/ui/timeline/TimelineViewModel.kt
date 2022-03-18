@@ -31,4 +31,8 @@ class TimelineViewModel: ViewModel() {
         return position + (timeMillis - startTime) * height / TimeUtils.millisInDay
     }
 
+    fun scaled(x: Float): Float {
+        return x / scale
+    }
+
 }
